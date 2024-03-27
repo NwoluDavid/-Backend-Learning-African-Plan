@@ -103,8 +103,35 @@ and price_range defaulting to a specific range).
 
 
 '''
+ ### this is a alternative solution which fixes the bug in the first solution, you can search by category, and it default value all works properly.
+'''
+from fastapi import FastAPI, Query
+from typing import List
 
+app = FastAPI()
 
+# Dummy product data for demonstration purposes
+product_data = [
+    {"name": "Product A", "category": "Electronics", "price": 599},
+    {"name": "Product B", "category": "Clothing", "price": 39},
+    {"name": "Product C", "category": "Electronics", "price": 799},
+    {"name": "Product D", "category": "Books", "price": 15},
+    {"name": "Product E", "category": "Clothing", "price": 25}
+]
+
+@app.get("/products")
+async def get_products(category: str = "all", price_range: str = "0-1000"):
+    min_price, max_price = map(float, price_range.split("-"))
+    filtered_products = []
+
+    for product in product_data:
+        if (category == "all" or product["category"] == category) and \
+                (min_price <= product["price"] <= max_price):
+            filtered_products.append(product)
+
+    return {"products": filtered_products}
+
+'''
 
 
 ## Combining Path and Query Parameters:
