@@ -154,7 +154,55 @@ are query parameters.
             filtered_restaurants.append(v)  # Append restaurant name to the list
         return filtered_restaurants
 
+### solution 2
+''' python
 
+from fastapi import FastAPI, Query
+
+app = FastAPI()
+
+# Dummy data for demonstration purposes
+restaurant_data = {
+    "1": [
+        {"name": "Restaurant A", "cuisine": "Italian", "rating": 4.5},
+        {"name": "Restaurant B", "cuisine": "Mexican", "rating": 3.8},
+        {"name": "Restaurant C", "cuisine": "Indian", "rating": 4.2}
+    ],
+    "2": [
+        {"name": "Restaurant X", "cuisine": "Japanese", "rating": 4.7},
+        {"name": "Restaurant Y", "cuisine": "Chinese", "rating": 4.0},
+        {"name": "Restaurant Z", "cuisine": "Thai", "rating": 4.1}
+    ],
+    "3": [
+        {"name": "Restaurant P", "cuisine": "French", "rating": 4.3},
+        {"name": "Restaurant Q", "cuisine": "American", "rating": 4.6},
+        {"name": "Restaurant R", "cuisine": "Mediterranean", "rating": 3.9}
+    ],
+    "4": [
+        {"name": "Restaurant M", "cuisine": "Korean", "rating": 4.2},
+        {"name": "Restaurant N", "cuisine": "Greek", "rating": 4.4},
+        {"name": "Restaurant O", "cuisine": "Vietnamese", "rating": 4.3}
+    ]
+}
+
+
+@app.get("/restaurants/{city_id}")
+async def get_restaurants(city_id: str, cuisine: str = None, min_rating: float = None):
+    if city_id not in restaurant_data:
+        return {"error": "City not found"}
+
+    restaurants = restaurant_data[city_id]
+
+    if cuisine:
+        restaurants = [r for r in restaurants if r["cuisine"].lower() == cuisine.lower()]
+
+    if min_rating:
+        restaurants = [r for r in restaurants if r["rating"] >= min_rating]
+
+    return {"restaurants": restaurants}
+
+
+'''
 
 '''
 ## Data Validation:
